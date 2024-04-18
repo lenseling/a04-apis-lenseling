@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Shibe Quotes</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div id="content">
+      <h1>Shibe Advice</h1>
+      <div id="shibe-container"></div>
+      <div id="quote-container"></div>
+      <div class="buttons-container">
+        <button id="new-image-btn">Get New Image</button>
+        <button id="new-quote-btn">Get New Quote</button>
+        <button id="new-both-btn">Get New Image and Quote</button>
+      </div>
+    </div>
+    <script>
+      async function fetchShibeImage() {
+        let response = await fetch("https://shibe.online/api/shibes?count=1");
+        let data = await response.json();
+        return data[0];
+      }
+
+      async function fetchQuote() {
+        let response = await fetch("https://api.quotable.io/random");
+        let data = await response.json();
+        return data.content;
+      }
+
+      async function displayShibe() {
+        let shibeContainer = document.getElementById("shibe-container");
+
+        let shibeImageUrl = await fetchShibeImage();
+
+        let shibeImage = document.createElement("img");
+        shibeImage.src = shibeImageUrl;
+        shibeImage.alt = "Random Shibe";
+        shibeContainer.innerHTML = "";
+        shibeContainer.appendChild(shibeImage);
+      }
+
+      async function displayQuote() {
+        let quoteContainer = document.getElementById("quote-container");
+
+        let quote = await fetchQuote();
+
+        let quoteText = document.createElement("p");
+        quoteText.textContent = `"${quote}"`;
+        quoteContainer.innerHTML = ""; //
+        quoteContainer.appendChild(quoteText);
+      }
+
+      document
+        .getElementById("new-image-btn")
+        .addEventListener("click", async () => {
+          await displayShibe();
+        });
+
+      document
+        .getElementById("new-quote-btn")
+        .addEventListener("click", async () => {
+          await displayQuote();
+        });
+
+      document
+        .getElementById("new-both-btn")
+        .addEventListener("click", async () => {
+          await displayShibe();
+          await displayQuote();
+        });
+
+      displayShibe();
+      displayQuote();
+    </script>
+  </body>
+</html>
